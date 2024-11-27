@@ -6,16 +6,24 @@
         $_SESSION['tasks'] = array();
     }
     
-    if ( isset($_GET['task_name']) ) {
-        array_push($_SESSION['tasks'], $_GET['task_name']);
-        unset($_GET['task_name']);
+       if ( isset( $_GET['task_name'] ) ) {
+        if ( $_GET['task_name'] != "") {
+            array_push($_SESSION['tasks'], $_GET['task_name']);
+            unset($_GET['task_name']);
+        }
+        else{
+            $_SESSION['message'] = "O campo nome da tarefa não pode ser vazio!";
+        }
     }
 
     if ( isset($_GET['clear']) ) {
         unset($_SESSION['tasks']);
     }
 
-
+    if ( isset($_GET['key']) ) {
+        array_splice( $_SESSION['tasks'], $_GET['key'], 1 );
+        unset($_GET['key']);
+    }    
 
 ?>
 
@@ -41,6 +49,12 @@
             <input type="text" name="task_name" placeholder="Nome da Tarefa">
             <button type="submit">Cadastrar</button>
         </form>
+        <?php
+            if ( isset( $_SESSION['message'] ) ) {
+                echo "<p style='color: #EF5350';>" . $_SESSION['message'] . "</p>";
+                unset( $_SESSION['message'] );
+            }
+        ?>
     </div>
     <div class="separetor">
     </div>
@@ -49,8 +63,18 @@
             if ( isset($_SESSION['tasks']) ){
                 echo "<ul>";
 
-                foreach ( $_SESSION['tasks'] as $key => $task ) {
-                    echo "<li>$task</li>";
+                            foreach ( $_SESSION['tasks'] as $key => $task ) {
+                    echo "<li>
+                            <span>$task</span>
+                            <button type='button' class='btn-clear' onclick='deletar$key()'>Remover</button>
+                            <script>
+                                fuction deletar$key(){
+                                    if ( confirm('Confirmar remoção?') ) {
+                                        window.location = 'http://localhost/UNIPÊ/Projeto-PHP/?key=$key';
+                                    }
+                                    return false;
+                                }    
+                        </li>";
                 }
 
                 echo "</ul>";
