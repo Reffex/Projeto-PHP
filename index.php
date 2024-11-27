@@ -11,7 +11,7 @@ if (isset($_GET['task_name'])) {
     if ($task_name != "") {
         $_SESSION['tasks'][] = htmlspecialchars($task_name);
     } else {
-        $_SESSION['message'] = "O campo nome da tarefa não pode ser vazio!";
+        $_SESSION['message'] = "O campo não pode ficar vazio!";
     }
 }
 
@@ -41,7 +41,7 @@ if (isset($_GET['key']) && is_numeric($_GET['key'])) {
 
 <div class="container">
     <div class="header">
-        <h1>Gerenciador de Tarefas</h1>
+        <h1>DoMore</h1>
     </div>
     <div class="form">
         <form action="" method="get">
@@ -76,7 +76,7 @@ if (isset($_GET['key']) && is_numeric($_GET['key'])) {
         </form>
     </div>
     <div class="footer">
-        <p>Desenvolvido por @renan, germano e artur</p>
+        <p>Desenvolvido por @Renan, Germano e Arthur</p>
     </div>
 </div>
 
