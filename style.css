@@ -1,8 +1,8 @@
 :root {
     --primary-color: #b700ff;
     --primary-color-hover: #c942ff;
-    --secondary-color: #fff;
-    --secondary-color-hover: #fff;
+    --secondary-color: #4DB6AC;
+    --secondary-color-hover: #58d2c6;
     --danger-color: #ff0400;
     --danger-color-hover: #ff4946;
     --text-color: #fff;
@@ -105,7 +105,7 @@ body {
     margin: 4px 0;
     border-radius: 4px;
     background: var(--secondary-color);
-    color: #333;
+    color: #fff;
     font-size: 14px;
     transition: background 0.3s;
 }
