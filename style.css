@@ -212,3 +212,17 @@ a:hover {
         font-size: 14px;
     }
 }
+
+.alert-success {
+    background: #4CAF50; 
+    margin: 4px;
+    padding: 12px;
+    color: #fff;
+}
+
+.alert-error {
+    background: #F44336; 
+    margin: 4px;
+    padding: 12px;
+    color: #fff;
+}

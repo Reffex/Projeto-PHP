@@ -1,4 +1,7 @@
 <?php
+
+require __DIR__ . '/connect.php';
+
 session_start();
 
 if (isset($_POST['task_name'])) {
@@ -7,25 +10,36 @@ if (isset($_POST['task_name'])) {
     $task_date = $_POST['task_date'] ?? '';
 
     if ($task_name !== "") {
-        $data = [
-            'task_name' => htmlspecialchars($task_name),
-            'task_description' => htmlspecialchars($task_description),
-            'task_date' => htmlspecialchars($task_date)
-        ];
-        $_SESSION['tasks'][] = $data;
-        header('Location: index.php');
+
+        $stmt = $conn->prepare('INSERT INTO tasks (task_name, task_description, task_date)
+                                VALUES (:name, :description, :date)');
+        $stmt->bindParam('name', $_POST['task_name']);
+        $stmt->bindParam('description', $_POST['task_description']);
+        $stmt->bindParam('date', $_POST['task_date']);
+
+        if ($stmt->execute()) {
+            $_SESSION['success'] = "Tarefa cadastrada com sucesso.";
+            header('Location: index.php');
+            exit;
+        }
     } else {
-        $_SESSION['message'] = "O campo não pode ficar vazio!";
+        $_SESSION['error'] = "Por favor, preencha todos os campos obrigatórios.";
         header('Location: index.php');
+        exit;
     }
-    exit;
 }
 
 if (isset($_GET['key'])) {
-    $key = intval($_GET['key']);
-    if (isset($_SESSION['tasks'][$key])) {
-        array_splice($_SESSION['tasks'], $key, 1);
+    $stmt = $conn->prepare('DELETE FROM tasks WHERE id = :id');
+    $stmt->bindParam(':id', $_GET['key']);
+
+    if ($stmt->execute()) {
+        $_SESSION['success'] = "Tarefa removida com sucesso.";
+        header('Location: index.php');
+        exit;
     }
+} else {
+    $_SESSION['error'] = "Erro ao tentar remover a tarefa.";
     header('Location: index.php');
     exit;
 }

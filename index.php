@@ -1,4 +1,7 @@
 <?php
+
+require __DIR__ . '/connect.php';
+
 session_start();
 
 if (!isset($_SESSION['tasks'])) {
@@ -6,10 +9,21 @@ if (!isset($_SESSION['tasks'])) {
 }
 
 if (isset($_GET['clear']) && $_GET['clear'] === "clear") {
-    unset($_SESSION['tasks']);
+    $stmt = $conn->prepare("DELETE FROM tasks");
+    if ($stmt->execute()) {
+        $_SESSION['success'] = "Todas as tarefas foram removidas.";
+    } else {
+        $_SESSION['error'] = "Ocorreu um erro ao tentar remover as tarefas.";
+    }
+
     header('Location: index.php');
     exit;
 }
+
+$stmt = $conn->prepare("SELECT * FROM tasks");
+$stmt->execute();
+$stmt->setFetchMode(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +38,22 @@ if (isset($_GET['clear']) && $_GET['clear'] === "clear") {
 <body>
 
 <div class="container">
+    <?php
+        if (isset($_SESSION['success'])) {
+    ?>
+        <div class="alert-success"><?php echo $_SESSION['success']; ?></div>
+    <?php
+        unset($_SESSION['success']);
+        }
+    ?>
+    <?php
+        if (isset($_SESSION['error'])) {
+    ?>
+        <div class="alert-error"><?php echo $_SESSION['error']; ?></div>
+    <?php
+        unset($_SESSION['error']);
+        }
+    ?>
     <div class="header">
         <h1>DoMore</h1>
     </div>
@@ -38,26 +68,18 @@ if (isset($_GET['clear']) && $_GET['clear'] === "clear") {
             <input type="date" name="task_date">
             <button type="submit">Cadastrar</button>
         </form>
-        <?php
-        if (isset($_SESSION['message'])) {
-            echo "<p style='color: #EF5350;'>" . htmlspecialchars($_SESSION['message']) . "</p>";
-            unset($_SESSION['message']);
-        }
-        ?>
     </div>
     <div class="separator"></div>
     <div class="list-tasks">
         <?php
-        if (!empty($_SESSION['tasks'])) {
             echo "<ul>";
-            foreach ($_SESSION['tasks'] as $key => $task) {
+            foreach ($stmt->fetchAll() as $task) {
                 echo "<li>
-                        <a href='details.php?key=$key'>" . htmlspecialchars($task['task_name']) . "</a>
-                        <button type='button' class='btn-clear' onclick='deletar($key)'>Remover</button>
+                        <a href='details.php?key=" . $task['id'] . "'>" . htmlspecialchars($task['task_name']) . "</a>
+                        <button type='button' class='btn-clear' onclick='deletar(" . $task['id'] . ")'>Remover</button>
                       </li>";
             }
             echo "</ul>";
-        }
         ?>
         <form action="" method="get">
             <input type="hidden" name="clear" value="clear">
