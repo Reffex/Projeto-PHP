@@ -1,11 +1,22 @@
 <?php
+
+require __DIR__ . '/connect.php';
+
 session_start();
 
-if (!isset($_GET['key']) || !isset($_SESSION['tasks'][$_GET['key']])) {
+if (!isset($_GET['key'])) {
     die('Tarefa não encontrada.');
 }
 
-$data = $_SESSION['tasks'][$_GET['key']];
+$stmt = $conn->prepare("SELECT * FROM tasks WHERE id = :id");
+$stmt->bindParam(':id', $_GET['key']);
+$stmt->execute();
+$data = $stmt->fetchAll();
+
+if (empty($data)) {
+    die('Tarefa não encontrada.');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -21,15 +32,15 @@ $data = $_SESSION['tasks'][$_GET['key']];
 
 <div class="details-container">
     <div class="header">
-        <h1><?php echo htmlspecialchars($data['task_name']); ?></h1>
+        <h1><?php echo htmlspecialchars($data[0]['task_name']); ?></h1>
     </div>
     <div class="row">
         <div class="details">
             <dl>
                 <dt>Descrição da Tarefa:</dt>
-                <dd><?php echo htmlspecialchars($data['task_description']); ?></dd>
+                <dd><?php echo htmlspecialchars($data[0]['task_description']); ?></dd>
                 <dt>Data da Tarefa:</dt>
-                <dd><?php echo htmlspecialchars($data['task_date']); ?></dd>
+                <dd><?php echo htmlspecialchars($data[0]['task_date']); ?></dd>
             </dl>
         </div>
         <div class="footer">
@@ -37,6 +48,6 @@ $data = $_SESSION['tasks'][$_GET['key']];
         </div>
     </div>
 </div>
-    
+
 </body>
 </html>
