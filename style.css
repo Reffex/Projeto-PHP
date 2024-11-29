@@ -26,6 +26,23 @@ body {
     font-family: 'Ubuntu', sans-serif;
 }
 
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    font-weight: bold;
+}
+
 .container {
     background: var(--container-bg);
     max-width: 450px;
@@ -137,8 +154,45 @@ body {
 }
 
 .footer p {
-    color: #999;
+    color: #fff;
     font-size: 12px;
+}
+
+.details-container {
+    background: #333;
+    max-width: 700px;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 12px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+}
+
+.details {
+    width: 300px;
+    border: 1px solid #f0f0f5;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-right: 8px;
+    padding: 16px;
+}
+
+.details dl dt {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color:#f0f0f5;
+}
+
+.details dl dd{
+    margin-top: 4px;
+    margin-bottom: 12px;
+    color: #f0f0f5;
 }
 
 @media (max-width: 480px) {
